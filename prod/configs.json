@@ -1,0 +1,7 @@
+{
+  "DEBUG": false,
+  "IS_DEVELOPMENT": false,
+  "ALLOWED_HOSTS": ["*"],
+  "DOMAIN_HOST": "https://claymould.suvidhaen.com",
+  "PRODUCTION_URL": "https://claymould.suvidhaen.com"
+}

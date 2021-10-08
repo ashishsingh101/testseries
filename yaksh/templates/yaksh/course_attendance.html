@@ -1,0 +1,200 @@
+{% extends "user.html" %}
+{% load custom_filters %}
+{% block title %} Course Attendance {% endblock %}
+
+{% block content %}
+<div id="wrapper" class="d-flex">
+    <div class="container" id="page-content-wrapper">
+        <div>
+            <h2><center>{{course.name}}</center></h2>
+            <center>Course Attendance</center>
+        </div>
+        <div class="d-flex p-2 bd-highlight">
+            <div class="col-md-4">
+                    <a href="{% url 'yaksh:course_detail' course.id %}" class="btn btn-primary">
+                        <i class="fa fa-arrow-left"></i>&nbsp;Back
+                    </a>
+            </div>
+        </div>
+    </div>
+</div>
+<center>
+<div class="badge badge-info">
+    <p>{{day}}  {{month}}  {{year}}</p>
+</div>
+<div style="padding: 20px 20px 20px 20px;">
+    <table id='table' class="table table-responsive-sm table-dark" style="border-spacing:10px;" cellspacing=15>
+        <thead class='thead-dark header'>
+            <tr id='table_column' >
+            </tr>
+        </thead>
+        <tbody id='table_body' class='list'>
+            <!--table body-->
+        </tbody>
+    </table>
+</div>
+<div>
+    <button type="button" class="btn btn-success" onclick="save_data()">Save</button>
+</div>
+</center>
+
+<!--javascript start-->
+<script>
+    window.onload = default_function()
+
+    function default_function(){
+        window.month = '{{month|safe}}';
+        window.year = '{{year|safe}}';
+        var lists = get_dayanddays(window.month, window.year, 1);
+        var day = lists[0];
+        var days = lists[1];
+
+        table_heading(day,days)
+        get_enrolled_user(days)
+
+    }
+
+    function get_dayanddays(month,year,day) {
+        var month_code = {'jan':11, 'feb':12, 'mar':1, 'apr':2, 'may':3, 'jun':4, 'jul':5, 'aug':6, 'sep':7, 'oct':8, 'nov':9, 'dec':10};
+        var month_days = {'jan':31, 'feb':28,'mar':31, 'apr':30, 'may':31, 'jun':30, 'jul':31, 'aug':31, 'sep':30, 'oct':31, 'nov':30, 'dec':31};
+        var total_days = month_days[month];
+        //print(month,year,month_days[month])
+        if (month=='jan' || month=='feb') {
+            if (month=='feb') {
+                if (year%400 == 0) {
+                    total_days = 29;
+                }
+                else if (year%100 == 0) {
+                    total_days = 28; 
+                }
+                else if (year%4==0) {
+                    total_days = 29;
+                }
+                else {
+                    total_days = month_days[month];
+                }
+            }
+            year -= 1;
+        }
+
+        var k = day ;
+        var m = month_code[month];
+        var d = (year%100);
+        year = Math.floor(year/100);
+        var c = (year%100);
+        //print(c,d)
+        var first_day = k + Math.floor((13*m - 1)/5) + d + Math.floor(d/4) + Math.floor(c/4) -2*c ;
+        first_day = ((first_day % 7) + 7)%7;
+        //returns index of day and total days in that month
+        return [first_day,total_days]
+    }
+
+    function table_heading(day, days){
+        table_column = document.getElementById('table_column');
+        table_column.innerHTML = "" ;
+        table_column.innerHTML += '<th style="">Users</th>'
+        for (let i=1; i<=days; i++){
+            table_column.innerHTML += '<th style="">'+i+'</th>'
+        }
+        
+    }
+
+    function table_rows(days){
+        table = document.getElementById('table');
+
+    }
+
+    function get_enrolled_user(days){
+        $.ajax({
+        url : "{% url 'yaksh:course_attendance' course_id=course_id %}", // the endpoint
+        type : "POST", // http method
+        data : {
+            'month' : window.month,
+            'year' : window.year,
+            'action' : 'get_enrolled_user',
+          csrfmiddlewaretoken: '{{ csrf_token }}' ,
+        }, // data sent with the post request
+
+        // handle a successful response
+        success : function(response){
+          enrolled_user_detail(days, response['user_id'], response['first_name'], response['last_name'], response['user_attendance'])
+        },
+
+        // handle a non-successful response
+    });
+    }
+
+    function enrolled_user_detail(days, user_id, first_name, last_name, user_attendance){
+        // console.log(user_attendance[10]);
+        table_body = document.getElementById('table_body');
+        var current_day = parseInt('{{day}}');
+        for (let i=0; i<user_id.length; i++){
+            var row  = document.createElement('tr');
+            row.appendChild(document.createElement('tr').appendChild(document.createTextNode(first_name[i]+' '+last_name[i])));
+            
+            for (let j=1; j<=days; j++) {
+                if (j<=current_day){
+                    var row_data = document.createElement('td');
+                    var row_text = document.createElement('input');
+                    row_text.setAttribute('type', 'checkbox');
+                    row_text.setAttribute('class', 'checkbox');
+                    row_text.setAttribute('name', user_id[i]);
+                    row_text.setAttribute('value', j);
+                    if (user_attendance[user_id[i]].includes(j)) {
+                        row_text.checked = true;
+                    }
+                }
+                else{
+                    var row_data = document.createElement('td');
+                    var row_text = document.createElement('input');
+                    row_text.setAttribute('type', 'checkbox');
+                    row_text.disabled = true;
+                }
+                
+                row_data.appendChild(row_text);
+                row.appendChild(row_data);
+            }
+            table_body.appendChild(row);  
+        }
+
+    }
+
+    function save_data() {
+        var checkbox = document.querySelectorAll('.checkbox');
+        var checkbox_data = {};
+        if (checkbox) {
+            for (let i=0; i<checkbox.length; i++) {
+                if (!(parseInt(checkbox[i].name) in checkbox_data)) {
+                    checkbox_data[parseInt(checkbox[i].name)] = [];
+                }
+                if (checkbox[i].checked == true){
+                    checkbox_data[parseInt(checkbox[i].name)].push(parseInt(checkbox[i].value));
+                }
+            }
+
+            checkbox_data = JSON.stringify(checkbox_data);
+            console.log(checkbox_data);
+            $.ajax({
+            url : "{% url 'yaksh:course_attendance' course_id=course_id %}", // the endpoint
+            type : "POST", // http method
+            data : {
+                'month' : window.month,
+                'year' : window.year,
+                'checkbox_data' : checkbox_data,
+                'action' : 'save_data',
+                csrfmiddlewaretoken: '{{ csrf_token }}' ,
+            },  // data sent with the post request
+
+            // handle a successful response
+            success : function(response){
+                alert('saved');
+            },
+
+            // handle a non-successful response
+            });
+        }
+        
+    }
+</script>
+<!--javascript end-->
+{% endblock content %}

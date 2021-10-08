@@ -1,0 +1,92 @@
+---
+summary: |-
+  PM first
+type: |-
+  mcq
+language: |-
+  Other
+description: |-
+  How was the first PM of India ?
+points: 3.0
+negative_marks: -1.0
+testcase:
+- test_case_type: |-
+    mcqtestcase
+  options: |-
+    Narender Damodar Modi
+  correct: false
+- test_case_type: |-
+    mcqtestcase
+  options: |-
+    Atal Bihari Vajpayee
+  correct: false
+- test_case_type: |-
+    mcqtestcase
+  options: |-
+    Indira Gandi
+  correct: false
+- test_case_type: |-
+    mcqtestcase
+  options: |-
+    Jawaharlal Nehru
+  correct: true
+active: true
+files: []
+grade_assignment_upload: false
+min_time: 0
+partial_grading: false
+snippet: ''
+solution: ''
+tags:
+- GK
+- '3'
+- reverse
+- mcq
+- Other
+topic:
+---
+summary: |-
+  Current PM
+type: |-
+  mcq
+language: |-
+  Other
+description: |-
+  How is the current PM of India?
+points: 3.0
+negative_marks: -1.0
+testcase:
+- test_case_type: |-
+    mcqtestcase
+  options: |-
+    Atal Bihari Vajpayee
+  correct: false
+- test_case_type: |-
+    mcqtestcase
+  options: |-
+    Narender Damodar Modi
+  correct: true
+- test_case_type: |-
+    mcqtestcase
+  options: |-
+    Indira Gandi
+  correct: false
+- test_case_type: |-
+    mcqtestcase
+  options: |-
+    Jawaharlal Nehru
+  correct: false
+active: true
+files: []
+grade_assignment_upload: false
+min_time: 0
+partial_grading: false
+snippet: ''
+solution: ''
+tags:
+- GK
+- '3'
+- reverse
+- mcq
+- Other
+topic:

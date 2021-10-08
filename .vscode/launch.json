@@ -1,0 +1,38 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+<<<<<<< HEAD
+
+        {
+            "name": "Python: Django",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/manage.py",
+            "python": "/home/b2babu/venv/fossee_online_test/bin/python3.8",
+            "args": [
+                "runserver",
+                "--noreload",
+                "0.0.0.0:8001",
+            ],
+            "django": true
+=======
+        
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "pwa-msedge",
+            "request": "launch",
+            "name": "Open course_modules.html",
+            "file": "/home/ashishsingh101/Downloads/online-test/yaksh/templates/yaksh/course_modules.html"
+>>>>>>> ad4c182f9d5fffd5cd90318c60912bf4feaec9d3
+        }
+    ]
+}

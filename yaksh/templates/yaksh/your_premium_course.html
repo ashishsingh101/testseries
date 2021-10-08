@@ -1,0 +1,29 @@
+{% extends "user.html" %}
+{% load custom_filters %}
+{% block title %}Hello world{% endblock %}
+{% load static %}
+
+{% block script %}
+{% endblock %}
+
+{% block main %}
+<html>
+<head>
+</head>
+<body>
+
+{% if check_premium == "yes" %}
+<center><u><h1>This is Your Premium Package Course</h1></u></center>
+<h2>&nbsp;&nbsp;hello world</h2>
+
+{% elif check_premium == "no" %}
+<center><h1>You have to Purchase Premium Package</h1>
+<a href="/exam/premium/"><button class="btn btn-primary">Purchase Now</button></a></center>
+
+{% endif %}
+
+</body>
+</html>
+
+
+{% endblock %}

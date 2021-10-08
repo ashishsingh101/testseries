@@ -1,0 +1,54 @@
+{% extends "user.html" %}
+{% load custom_filters %}
+{% block title %}Payment Status{% endblock %}
+{% load static %}
+
+
+{% block script %}
+
+{% endblock %}
+
+
+{% block main %}
+<html>
+<head>
+</head>
+<body>
+<style>
+body{
+	background-color: #B2FFF1;
+}
+</style>
+
+
+        {% if response.RESPCODE == '01' %}
+
+
+        <center><h1>₹{{response.TXNAMOUNT}} Successfully Transferred of {{response.ORDERID}}</h1></center>
+
+        <center><h2>YOUR TRANSACTION SUCCESSFULLY COMPLETED<br>
+        Thank You!</h2>
+
+        <form action="/exam/quizzes/handlerequest/" method="post">
+            <input name="user_id" value="{{user_id}}" type="hidden" readonly="readonly">
+            
+        </form></center>
+
+
+
+        {% else %}
+        <center><h1>₹{{response.TXNAMOUNT}} Not Transferred of {{response.ORDERID}}</h1></center>
+
+        <center><h2>YOUR TRANSACTION GET FAILED!<br>Try Again!</h2>
+        {% endif%}
+
+    </div>
+
+</div>
+<script>
+</script>
+
+
+</body>
+</html>
+{% endblock %}

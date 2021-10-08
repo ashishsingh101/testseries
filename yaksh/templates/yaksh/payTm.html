@@ -1,0 +1,41 @@
+{% extends "user.html" %}
+{% load custom_filters %}
+{% block title %}Payment Status{% endblock %}
+{% load static %}
+{% block script %}
+
+{% endblock %}
+{% block main %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Paytm merchant payment page</title>
+</head>
+<body>
+<style>
+body{
+	background-color: #DCDCDC;
+}
+</style>
+{% if if_premium == "yes" %}
+<center><h1>you have already purchased this Premium Course, you cannot purchase it again!</h1></center>
+
+
+{% elif if_premium == "no" %}
+<h2><center>Redirecting you to the merchant....<br>
+Please do not refresh your page....</center></h2>
+
+<center><img src="https://media1.giphy.com/media/dJezVlwfVulTykjRQj/200w.gif"></center>
+<form action="https://securegw-stage.paytm.in/theia/processTransaction" method="post" name="paytm">
+    {% for key, value in param_dict.items %}
+    <input type="hidden" name="{{key}}" value="{{value}}">
+    {% endfor %}
+</body>
+<script>
+document.paytm.submit()
+</script>
+</html>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,7 @@
+{
+  "DEBUG": true,
+  "ALLOWED_HOSTS": ["*"],
+  "DOMAIN_HOST": "http://127.0.0.1",
+  "PRODUCTION_URL": "http://127.0.0.1",
+  "IS_DEVELOPMENT": true
+}

@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block nav %}
+<nav class="navbar navbar-expand-sm navbar-dark bg-primary fixed-top">
+    <a class="navbar-brand" href="{% url 'yaksh:index' %}">
+    <img src="{% static 'yaksh/images/yaksh_banner.png' %}" alt="YAKSH">
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarColor01">
+    <ul class="navbar-nav mr-auto">
+        
+    </ul>
+    <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'yaksh:view_notifications' %}">
+            <i class="fa fa-bell" style="size: 18px"></i>&nbsp;Notifications
+            {% if request.custom_notifications > 0 %}
+                <span class="badge badge-success badge-pill">
+                    {{request.custom_notifications}}
+                </span>
+            {% endif %}
+          </a>
+        </li>
+        <li class="nav-item dropdown my-lg-0" style="font-size: 1.2rem">
+            <a class="dropdown-toggle nav-link" id="user_dropdown" data-toggle="dropdown" href="#">{{user.get_full_name|title}}
+            </a>
+            <div class="dropdown-menu dropdown-menu-right">
+            <a class="dropdown-item" href="{% url 'yaksh:edit_profile' %}">
+                <i class="fa fa-user"></i>  My Profile
+            </a>
+            
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="{% url 'password_change' %}">
+                <i class="fa fa-key"></i> Change Password
+            </a>
+            <div class="dropdown-divider"></div>
+                <a class="dropdown-item" id="user_logout" href="{% url 'yaksh:logout' %}">
+                    <i class="fa fa-sign-out"></i> Logout
+                </a>
+            </div>
+        </li>
+    </ul>
+    </div>
+</nav>
+{% endblock %}
+{% block content %}
+
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'yaksh/css/parent_calender.css' %}">
+{% endblock %}
+
+<center>
+
+<form action="" method="post">
+<div class="card" style="width: 30rem;">
+<ol class="list-group list-group-numbered">
+{% for ward in wards %}
+  {% if ward.is_verified %}
+  <button type="submit" name="ward_selected" value={{ward.ward_user}} class="list-group-item d-flex justify-content-between align-items-start">
+    <div class="ms-2 me-auto">
+      <div class="fw-bold">{{ward.ward_user}}</div>
+    </div>
+      <span class="badge bg-primary rounded-pill" style="color:white;">verified</span>
+  </button>
+  {% else %}
+  <button type="submit" class="list-group-item d-flex justify-content-between align-items-start" disabled>
+    <div class="ms-2 me-auto">
+      <div class="fw-bold">{{ward.ward_user}}</div>
+    </div>
+      <span class="badge bg-primary rounded-pill" style="color:white;"> Not verified</span>
+  {% endif %}
+{% endfor %}
+</ol>
+
+  {% csrf_token %}
+  <div class="input-group mb-3">
+    <input type="text" class="form-control" placeholder="ward username" aria-label="Recipient's username" name="wardAdd" aria-describedby="button-addon2">
+    <button class="btn btn-primary mb-3" type="submit" id="button-addon2" name="wardAddButton">Add</button>
+  </div>
+</form>
+{% if wardAddMssg %}
+<div class="alert alert-info alert-dismissible">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+    <strong>{{wardAddMssg}}</strong>
+  </div>
+{% endif %}
+</div>
+</center>
+
+<!--details of the selected ward-->
+<div class="col justify-content-center" style="justify-content: center;width: 800px;margin: auto;">
+
+{% if ward_selected %}
+  <div class="card border-dark mb-3" style="max-width: 55rem;align:center;">
+    <span class="card-header p-3 mb-2 bg-primary text-white" style="font-size:30px;">
+      {{ward_selected}}
+      <form action="{% url 'yaksh:guardian_calender' %}" method="get">
+      {% csrf_token %}
+        <!--button for ward attendance-->
+        <button type="submit" name="attendance_button" value={{ward_selected}} class="btn btn-info" style="float: right;">Attendance</button>
+      </form>
+    </span>
+    <p>{{attendance_ward}}</p>
+  <div class="card-body text-dark">
+    {% for course in course_enrolled %}
+    <div>
+      <button type="button" class="btn btn-primary" data-toggle="collapse" data-target=#{{course.id}} >{{course.name}}</button>
+      <div id={{course.id}} class="collapse">
+      <div class="card-header">
+        
+        {% for key, value in course_completed.items %}
+          {% if key == course.id %}
+            <div class="progress" style="height:15px;">
+            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: {{value}}%;">{{value}}%</div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+      <div class="card-body">
+        <p class="card-text">Instructor : {{course.creator.first_name}} {{course.creator.last_name}}</p>
+        {% with course.get_learning_modules as modules %}
+                                        {% if modules %}
+                                            <p> <span class="badge badge-pill badge-primary">
+                                                Course Content</span>
+                                                <ul>
+                                                    {% for module in modules %}
+                                                        <li>{{module.name}}</li>
+
+                                                        {% with course.get_learning_units as units %}
+                                                          {% if units %}
+                                                            <ul>
+                                                              {% for unit in units %}
+                                                                <li><b>{{unit}}</b></li>
+                                                                {% for key,values in quiz_marks.items %}
+                                                                  <!--values have total_marks and marks_obtained as key-->
+                                                                  {% if key == unit.id %}
+                                                                    <!--key is the unit id-->
+                                                                    <!--{{key}}{{values}}-->
+                                                                    {% for key1, values1 in values.items %}
+                                                                      <!--key1 is the total_marks and marks_obtained-->
+                                                                      {% for key2,values2 in values1.items %}
+                                                                        <div>
+                                                                          <span class="badge bg-primary rounded-pill">{{key2}}</span>
+                                                                          <span>Marks: {{values2.marks}}/{{values.total_marks}}  </span>
+                                                                          {% if values2.passed %}
+                                                                            <span class="badge bg-green rounded-pill" style="font-size:12px;">passed</span>
+                                                                          {% else %}
+                                                                            <span class="badge bg-red rounded-pill" style="font-size:12px;">failed</span>
+                                                                          {% endif %}
+                                                                          <p>Percent: {{values2.percent}}%</p>
+                                                                        </div>
+                                                                      {% endfor %}
+                                                                    {% endfor %}
+                                                                  {% endif %}
+                                                                {% endfor %}
+                                                              {% endfor %}
+                                                            </ul>
+                                                          {% endif %}
+                                                        {% endwith %}
+
+                                                    {% endfor %}
+                                                </ul>
+                                            </p>
+                                        {% endif %}
+        {% endwith %}
+      </div>
+      </div>
+    </div>
+    <br>
+    {% endfor %}
+  </div>
+  </div>
+
+{% endif %}
+
+</div>
+{% if attendance_ward %}
+<p>{{attendance_ward}}</p>
+
+{% endif %}
+
+{% endblock %}
+

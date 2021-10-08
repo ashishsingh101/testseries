@@ -1,0 +1,194 @@
+{% load static %}
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="{% static 'yaksh/css/calender.css' %}">
+</head>
+<body>
+  <div class="wrapper">
+  <main>
+    <div class="toolbar">
+      <div class="toggle">
+
+        <button type="button" onclick='move_to_dashboard()' class="calendar" data-bs-toggle="button" autocomplete="off">Back</button>
+
+        <div class="dropdown">
+          <select id="month" onchange="change_month()" class="toggle__option toggle__option--selected" data-toggle="dropdown">
+            <option value="jan">January</option>
+            <option value="feb">February</option>
+            <option value="mar">March</option>
+            <option value="apr">April</option>
+            <option value="may">May</option>
+            <option value="jun">June</option>
+            <option value="jul">July</option>
+            <option value="aug">August</option>
+            <option value="sep">September</option>
+            <option value="oct">October</option>
+            <option value="nov">November</option>
+            <option value="dec">December</option>
+          </select>
+          <select id="year" onchange="change_year()" class="toggle__option toggle__option--selected" data-toggle="dropdown">
+            {% for y in year_list %}
+              <option value={{y}}>{{y}}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <p>{{ward_user}}</p>
+        <p id='msg1'></p>
+      </div>
+    </div>
+    <center>
+    <p id='heading_calendar' style="font-size: 20px;color: rgb(70, 68, 68);"></p>
+    </center>
+    <div class="calendar">
+      <div class="calendar__header">
+        <div>sun</div>
+        <div>mon</div>
+        <div>tue</div>
+        <div>wed</div>
+        <div>thu</div>
+        <div>fri</div>
+        <div>sat</div>
+      </div>
+      <div id='calendar_days' class="calendar__week">
+        <!--days-->
+      </div>
+    </div>
+  </main>
+
+</div>
+
+<script>
+  window.onload = default_function()
+
+  function change_year() {
+    year_id = document.getElementById('year')
+    year_val = year_id.options[year_id.selectedIndex].value
+    set_calender();
+  }
+
+  function change_month() {
+    month_id = document.getElementById('month')
+    month_val = month_id.options[month_id.selectedIndex].value
+    set_calender();
+  }
+
+  function set_calender() {
+    var list = get_dayanddays(month_val, year_val, 1);
+    day = list[0];
+    days = list[1];
+
+    calendar_days = document.getElementById('calendar_days')
+    calendar_days.innerHTML = ""
+
+    show_present_absent(day, days, month_val, year_val)
+
+    heading_calendar = document.getElementById('heading_calendar');
+    heading_calendar.innerText = month_val + ' ' + year_val;
+
+  }
+
+  function get_dayanddays(month,year,day) {
+        var month_code = {'jan':11, 'feb':12, 'mar':1, 'apr':2, 'may':3, 'jun':4, 'jul':5, 'aug':6, 'sep':7, 'oct':8, 'nov':9, 'dec':10};
+        var month_days = {'jan':31, 'feb':28,'mar':31, 'apr':30, 'may':31, 'jun':30, 'jul':31, 'aug':31, 'sep':30, 'oct':31, 'nov':30, 'dec':31};
+        var total_days = month_days[month];
+        //print(month,year,month_days[month])
+        if (month=='jan' || month=='feb') {
+            if (month=='feb') {
+                if (year%400 == 0) {
+                    total_days = 29;
+                }
+                else if (year%100 == 0) {
+                    total_days = 28; 
+                }
+                else if (year%4==0) {
+                    total_days = 29;
+                }
+                else {
+                    total_days = month_days[month];
+                }
+            }
+            year -= 1;
+        }
+
+        var k = day ;
+        var m = month_code[month];
+        var d = (year%100);
+        year = Math.floor(year/100);
+        var c = (year%100);
+        //print(c,d)
+        var first_day = k + Math.floor((13*m - 1)/5) + d + Math.floor(d/4) + Math.floor(c/4) -2*c ;
+        first_day = ((first_day % 7) + 7)%7;
+        //returns index of day and total days in that month
+        return [first_day,total_days]
+  }
+
+  function default_function() {
+    //month_val = {{month}};
+    month_val = "{{ month|safe }}" 
+    year_val = "{{ year|safe }}";
+    set_calender()
+  }
+
+  function move_to_dashboard() {
+    history.back();
+  }
+
+  function info(info) {
+    alert(info)
+  }
+
+  function show_present_absent(day, days, month, year){
+    $.ajax({
+        url : "{% url 'yaksh:guardian_calender' %}", // the endpoint
+        type : "POST", // http method
+        data : {
+          month:month,
+          year:year,
+          user:"{{ ward_user|safe }}",
+          csrfmiddlewaretoken: '{{ csrf_token }}' ,
+        }, // data sent with the post request
+
+        // handle a successful response
+        success : function(response){
+          print_days(response['present_days'], day, days)
+        },
+
+        // handle a non-successful response
+    });
+  }
+
+  function print_days(present, day, days){
+    for (let i=0; i<day; i++) {
+      calendar_days.innerHTML += '<div class="calendar__day day"></div>';
+    }
+    for (let i=1; i<=days; i++) {
+      if (inArray(i, present)){
+        calendar_days.innerHTML += '<div class="calendar__day day" style="background-color:green;filter:opacity(30%);color:white;font-size:20px;">'+i+'</div>'; 
+      }
+      else{
+        calendar_days.innerHTML += '<div class="calendar__day" style="background-color:red;filter:opacity(30%);font-size:20px;">'+i+'</div>'; 
+      }
+    
+    }
+    for (let i=0; i<(7-(day+days)%7)%7; i++) {
+      calendar_days.innerHTML += '<div class="calendar__day day"></div>'; 
+    }
+  }
+
+  function inArray(val, array){
+    for (let i=0; i<array.length; i++){
+      if (array[i] == val){
+        return 1;
+      }
+    }
+    return 0;
+  }
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,24 @@
+{% extends "user.html" %}
+{% load custom_filters %}
+{% block title %} Premium Payment {% endblock %}
+
+{% block script %}
+
+{% endblock %}
+
+{% block main %}
+<div class="card" style="width: 18rem;">
+  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9PbYLe2ktl4w2VYD_V3nTN_LQNPrMTGwbAg&usqp=CAU" class="card-img-top" alt="...">
+  <div class="card-body">
+    <h5 class="card-title">Get Hello World Page</h5>
+    <p class="card-text">Price:-1000₹</p>
+    {% if purchased_premium == "yes" %}
+    <button class="btn btn-primary disabled">Buy Now</button>
+    {% elif purchased_premium == "no" %}
+    <a href="/exam/quizzes/checkout/" class="btn btn-primary stretched-link">Buy Now</a>
+    {% endif %}
+  </div>
+</div>
+</form>
+
+{% endblock %}
