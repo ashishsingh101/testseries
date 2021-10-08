@@ -436,6 +436,7 @@ def quizlist_user(request, enrolled=None, msg=None):
                 'completion_percentage': _percent,
             }
         )
+    premium_user=Purchase_Premium.objects.all()
 
     messages.info(request, msg)
     context = {
