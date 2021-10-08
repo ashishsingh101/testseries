@@ -439,7 +439,9 @@ def quizlist_user(request, enrolled=None, msg=None):
 
     messages.info(request, msg)
     context = {
-        'user': user, 'courses': courses_data,
+        'premium_user':premium_user,
+        'user': user,
+        'courses': courses_data,
         'title': title
     }
 
@@ -4854,6 +4856,7 @@ def checkout(request):
         'WEBSITE': 'WEBSTAGING',
         'CHANNEL_ID': 'WEB',
         'CALLBACK_URL':'http://localhost:9000/exam/quizzes/handlerequest/',
+        # 'CALLBACK_URL':'https://claymould.suvidhaen.com/exam/quizzes/handlerequest/',
         }
     user=request.user
     param_dict['CHECKSUMHASH'] = Checksum.generate_checksum(param_dict, MERCHANT_KEY)

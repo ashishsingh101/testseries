@@ -202,7 +202,7 @@ TEMPLATES = [
     },
 ]
 
-CONF_FOLDER = 'credentials'
+CONF_FOLDER = 'prod'
 SECRET_CONFIG_PATH = os.path.join(os.getcwd(), CONF_FOLDER, 'client_secret_google_login.json')
 with open(SECRET_CONFIG_PATH, 'rb') as f:
     sec_conf = f.read()
