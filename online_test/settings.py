@@ -202,14 +202,18 @@ TEMPLATES = [
     },
 ]
 
-CONF_FOLDER = 'prod'
-SECRET_CONFIG_PATH = os.path.join(os.getcwd(), CONF_FOLDER, 'client_secret_google_login.json')
-with open(SECRET_CONFIG_PATH, 'rb') as f:
-    sec_conf = f.read()
+# CONF_FOLDER = 'prod'
+# SECRET_CONFIG_PATH = os.path.join(os.getcwd(), CONF_FOLDER, 'client_secret_google_login.json')
+# with open(SECRET_CONFIG_PATH, 'rb') as f:
+#     sec_conf = f.read()
 
-sec_conf = json.loads(sec_conf)
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = sec_conf.get("web").get("client_id")
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = sec_conf.get("web").get("client_secret")
+# sec_conf = json.loads(sec_conf)
+
+# SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = sec_conf.get("web").get("client_id")
+# SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = sec_conf.get("web").get("client_secret")
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '688445006132-84namante2o63sippj5jc7in4pgbeggl.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'x4NbyQhWAu5ncDvwINuf1x1s'
 
 SOCIAL_AUTH_FACEBOOK_KEY = '340876084167675'
 SOCIAL_AUTH_FACEBOOK_SECRET = '089e3afbad5a64663bc3ad646e8ed8ef'

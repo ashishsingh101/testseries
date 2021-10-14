@@ -3514,9 +3514,10 @@ class Real_Answer_Paper(models.Model):
     percentage=models.FloatField(default="")
     result=models.CharField(max_length=50, default="")
     status=models.CharField(max_length=50, default="")
+    course_name=models.CharField(max_length=1000, default="")
 
     def __str__(self):
-        return self.username
+        return "username:-"+ "(" +self.username+ ")" + " "+"quiz Name:-"+ "(" +self.course_name+ ")"
 
 
 

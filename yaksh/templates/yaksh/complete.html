@@ -7,7 +7,7 @@
 {% block nav %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
     <a class="navbar-brand" href="{% url 'yaksh:index' %}">
-        <img src="{% static 'yaksh/images/yaksh_banner.png' %}" alt="YAKSH">
+        <img src="{% static 'yaksh/images/main_logo.png' %}" alt="YAKSH" width="45px" height="40px">
     </a>
 </nav>
 {% endblock %}
@@ -77,12 +77,13 @@
 <input name="percentage" value="{{newgrade|div:total_grades|mul:100}}" type="hidden"></input>
 <input name="result" value="{{result}}" type="hidden"></input>
 <input name="status" value="completed" type="hidden"></input>
+<input name="course_name" value="{{course_name_quiz}}" type="hidden"></input>
 
 
 <center><a href="/exam" class="btn btn-primary btn-lg">Next</a></center>
 
-</form>
 
+</form>
 
 
         </a>
@@ -91,6 +92,8 @@
     <a href="{% url 'yaksh:index' %}" id="home" class="btn btn-primary btn-lg"> Home </a>
 {% endif %}
 {% endif %}
+{{module_id.name}}
+
 </center>
 <br><br>
 {% endblock content %}
