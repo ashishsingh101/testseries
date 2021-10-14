@@ -4835,7 +4835,7 @@ def premium(request):
     purchased_premium=""
     if Purchase_Premium.objects.filter(user_id=user.id):
         purchased_premium="yes"
-    else:
+    else: 
         purchased_premium="no"
     return render(request, 'yaksh/premium.html', {'purchased_premium':purchased_premium})
 
