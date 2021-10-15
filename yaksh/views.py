@@ -1456,7 +1456,7 @@ def complete(request, reason=None, attempt_num=None, questionpaper_id=None,
             newgrade = newgrade + grade
 
     user=request.user
-    w=(newgrade/total_grades)*100
+    percentage=(newgrade/total_grades)*100
     result=""
     if (newgrade/total_grades)*100 <=30:
         result="fail"
@@ -1470,24 +1470,28 @@ def complete(request, reason=None, attempt_num=None, questionpaper_id=None,
     paper.set_end_time(timezone.now())
     message = reason or "Quiz has been submitted"
          
-
+    check_attempt=""
+    user=request.user
     if request.method == "POST":
-        username=request.POST.get('username', f'{user.username}')
-        attempt_number=request.POST.get('attempt_number',f'{paper.attempt_number}')
-        marks_obtained=request.POST.get('marks_obtained',f'{newgrade}')
-        percentage=request.POST.get('percentage',f'{w}')
-        result=request.POST.get('result', f'{result}')
-        status=request.POST.get('status','completed')
-        course_name=request.POST.get('course_name', f'{course_name_quiz}')
-     
-        real_answer_paper=Real_Answer_Paper(username=username,
-            attempt_number=attempt_number,
-            marks_obtained=marks_obtained,
-            percentage=percentage,
-            result=result,
-            status=status,
-            course_name=course_name)
-        real_answer_paper.save()
+        if Real_Answer_Paper.objects.filter(attempt_number=paper.attempt_number,username=user.username,course_name=Real_Answer_Paper.course_name):
+            return redirect('/exam')
+        else:
+            username=request.POST.get('username', f'{user.username}')
+            attempt_number=request.POST.get('attempt_number',f'{paper.attempt_number}')
+            marks_obtained=request.POST.get('marks_obtained',f'{newgrade}')
+            percentage=request.POST.get('percentage',f'{percentage}')
+            result=request.POST.get('result', f'{result}')
+            status=request.POST.get('status','completed')
+            course_name=request.POST.get('course_name', f'{course_name_quiz}')
+         
+            real_answer_paper=Real_Answer_Paper(username=username,
+                attempt_number=attempt_number,
+                marks_obtained=marks_obtained,
+                percentage=percentage,
+                result=result,
+                status=status,
+                course_name=course_name)
+            real_answer_paper.save()
 
     context = {'course_name_quiz':course_name_quiz,'message': message, 'paper': paper,'module_id': learning_module.id,'course_id': course_id,'learning_unit': learning_unit,'total_grades':total_grades,'newgrade':newgrade}
     if is_moderator(user):
@@ -4856,8 +4860,8 @@ def checkout(request):
         'INDUSTRY_TYPE_ID': 'Retail',
         'WEBSITE': 'WEBSTAGING',
         'CHANNEL_ID': 'WEB',
-        # 'CALLBACK_URL':'http://localhost:9000/exam/quizzes/handlerequest/',
-        'CALLBACK_URL':'https://claymould.suvidhaen.com/exam/quizzes/handlerequest/',
+        'CALLBACK_URL':'http://localhost:9000/exam/quizzes/handlerequest/',
+        # 'CALLBACK_URL':'https://claymould.suvidhaen.com/exam/quizzes/handlerequest/',
         }
     user=request.user
     param_dict['CHECKSUMHASH'] = Checksum.generate_checksum(param_dict, MERCHANT_KEY)
