@@ -1,0 +1,49 @@
+{% extends 'user.html' %}
+{% block title %}User Statistics{% endblock %}
+{% block content %}
+<html>
+<head>
+</head>
+<body>
+
+
+
+<div class="container mt-1">
+    <div class="row">
+        <div class="col-12">
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th><h5 id="text">Sr.no</h5></th>
+                    <th><h5 id="text">attempt no.</h5></th>
+                    <th><h5 id="text">marks obtained</h5></th>
+                    <th><h5 id="text">Quiz Name</h5></th>
+                  </tr>
+                </thead>
+                <tbody>
+                	{% for ud in user_details %}
+                 <tr>
+
+                        <th>{{forloop.counter}}:-</th>
+
+                        <th>{{ud.attempt_number}}</th>
+
+                        <th>{{ud.marks_obtained}}</th>
+
+                        <th>{{ud.course_name}}</th>
+
+                        {% endfor %}
+                    </tbody>
+                  </table>
+            </div>
+        </div>
+    </div>
+<br>
+<div class="container">
+</div>
+
+
+{% endblock %}
+
+</body>
+</html>

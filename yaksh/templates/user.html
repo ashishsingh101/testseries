@@ -30,6 +30,10 @@
                 <a class="dropdown-toggle nav-link" id="user_dropdown" data-toggle="dropdown" href="#">{{user.get_full_name|title}}
                 </a>
                 <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item" href="/exam/statistics/">
+                    <i class="fa fa-bar-chart"></i>User Statistics
+                </a>
+                <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="{% url 'yaksh:edit_profile' %}">
                     <i class="fa fa-user"></i>  My Profile
                 </a>

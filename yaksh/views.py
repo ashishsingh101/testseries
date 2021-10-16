@@ -1469,8 +1469,8 @@ def complete(request, reason=None, attempt_num=None, questionpaper_id=None,
     paper.update_marks()
     paper.set_end_time(timezone.now())
     message = reason or "Quiz has been submitted"
+
          
-    check_attempt=""
     user=request.user
     if request.method == "POST":
         if Real_Answer_Paper.objects.filter(attempt_number=paper.attempt_number,username=user.username,course_name=Real_Answer_Paper.course_name):
@@ -4860,8 +4860,8 @@ def checkout(request):
         'INDUSTRY_TYPE_ID': 'Retail',
         'WEBSITE': 'WEBSTAGING',
         'CHANNEL_ID': 'WEB',
-        'CALLBACK_URL':'http://localhost:9000/exam/quizzes/handlerequest/',
-        # 'CALLBACK_URL':'https://claymould.suvidhaen.com/exam/quizzes/handlerequest/',
+        # 'CALLBACK_URL':'http://localhost:9000/exam/quizzes/handlerequest/',
+        'CALLBACK_URL':'https://claymould.suvidhaen.com/exam/quizzes/handlerequest/',
         }
     user=request.user
     param_dict['CHECKSUMHASH'] = Checksum.generate_checksum(param_dict, MERCHANT_KEY)
@@ -4902,7 +4902,8 @@ def handlerequest(request):
     return render(request, 'yaksh/paytmstatus.html',{'response': response_dict, 'user_id':user_id})
 
 
-
+@login_required
+@email_verified
 def your_premium_course(request):
     user=request.user
     check_premium=""
@@ -4913,3 +4914,24 @@ def your_premium_course(request):
         check_premium="no"
         print('no')
     return render(request, 'yaksh/your_premium_course.html', {'check_premium':check_premium})
+
+
+@login_required
+@email_verified
+def statistics(request):
+    user=request.user
+    user_details=Real_Answer_Paper.objects.filter(username=user.username)
+
+    marks_list= ([(item.marks_obtained) for item in user_details])
+    total_marks_obtained=sum(marks_list)
+
+    attempt_list=([(item.attempt_number) for item in user_details])
+    total_attempt=len(attempt_list)
+
+    context={'total_attempt':total_attempt,'total_marks_obtained':total_marks_obtained,'user_details':user_details}
+    return render(request, 'yaksh/user_statistics.html',context)
+
+
+
+
+    

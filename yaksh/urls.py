@@ -10,6 +10,7 @@ urlpatterns = [
     url(r'^quizzes/checkout/$', views.checkout, name="checkout"),
     url(r'^premium/$', views.premium, name="premium"),
     url(r'^quizzes/handlerequest/$', views.handlerequest, name="handlerequest"),
+    url(r'^statistics/$', views.statistics, name="statistics"),
 
     url(r'^login/$', views.user_login, name='login'),
     url(r'^logout/$', views.user_logout, name="logout"),
