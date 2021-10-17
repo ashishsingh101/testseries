@@ -221,7 +221,7 @@ def guardian_register(request):
 
             new_user = authenticate(username=uname, password=pwd)
             login(request, new_user)
-            return render(req/exam/register/guardian/uest, 'yaksh/guardian_dashboard.html')
+            return render(request, 'yaksh/guardian_dashboard.html')
         
         else:
             return my_render_to_response(
