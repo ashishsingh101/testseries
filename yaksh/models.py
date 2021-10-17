@@ -3505,7 +3505,7 @@ class QRcodeHandler(models.Model):
     def can_use(self):
         return self.answerpaper.is_attempt_inprogress()
 
-
+        
 
 class Real_Answer_Paper(models.Model):
     username=models.CharField(max_length=200, default="")
