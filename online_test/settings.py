@@ -70,6 +70,7 @@ INSTALLED_APPS = (
     'rest_framework.authtoken',
     'storages',
     'schema_graph'
+    'mass'
 )
 
 MIDDLEWARE = (
